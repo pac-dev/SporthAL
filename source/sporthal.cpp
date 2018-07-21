@@ -64,4 +64,15 @@ extern "C" {
 		soundpipeal_stop();
 		return 0;
 	}
+	
+	int sporthal_setp(int id, float val)
+	{
+		pd.p[id] = val;
+		return 0;
+	}
+	
+	float sporthal_getp(int id)
+	{
+		return pd.p[id];
+	}
 }

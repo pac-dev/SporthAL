@@ -28,12 +28,12 @@ ifeq ($(config),debug)
   INCLUDES += -I../.. -I../../source -I../../source/generated -I../../include/Soundpipe/h -I../../include/Soundpipe/lib/faust -I../../include/Soundpipe/lib/kissfft -I../../include/Soundpipe/lib/spa
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
+  ALL_LDFLAGS += $(LDFLAGS) -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -64,12 +64,12 @@ ifeq ($(config),release)
   INCLUDES += -I../.. -I../../source -I../../source/generated -I../../include/Soundpipe/h -I../../include/Soundpipe/lib/faust -I../../include/Soundpipe/lib/kissfft -I../../include/Soundpipe/lib/spa
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop']" --memory-init-file 0
+  ALL_LDFLAGS += $(LDFLAGS) -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
