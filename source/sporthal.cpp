@@ -22,30 +22,32 @@ static void process(sp_data *sp, void *udp)
 sp_data *sp;
 plumber_data pd;
 SoundpipeALState *spal;
+bool compiled;
 
 extern "C" {
 	int sporthal_init()
 	{
-		sp = 0;
+		sp_create(&sp);
+		plumber_register(&pd);
+		plumber_init(&pd);
+		pd.sp = sp;
+		compiled = false;
 		return 0;
 	}
 
 	int sporthal_compile(char *script)
 	{
-		if (sp) {
+		if (compiled) {
 			plumber_recompile_string(&pd, script);
 			return 0;
 		}
-		sp_create(&sp);
-		plumber_register(&pd);
-		plumber_init(&pd);
-		pd.sp = sp;
 		plumber_parse_string(&pd, script);
 
 		//pd.p[0] = 440; // p-register test
 
 		plumber_compute(&pd, PLUMBER_INIT);
 		spal = soundpipeal_init(pd.sp, &pd, process);
+		compiled = true;
 
 		// functions must return immediately for emscripten compatibility
 		return 0;
