@@ -386,7 +386,7 @@ workspace "sporthal"
 		linkoptions "-O3"
 	filter {}
 	local emcc_opt = 
-	[[-s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0]]
+	[[-s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"]]
 	buildoptions(emcc_opt)
 	linkoptions(emcc_opt)
 	
