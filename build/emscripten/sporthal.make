@@ -28,12 +28,12 @@ ifeq ($(config),debug)
   INCLUDES += -I../.. -I../../source -I../../source/generated -I../../include/Soundpipe/h -I../../include/Soundpipe/lib/faust -I../../include/Soundpipe/lib/kissfft -I../../include/Soundpipe/lib/spa
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_LDFLAGS += $(LDFLAGS) -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -41,7 +41,7 @@ ifeq ($(config),debug)
   endef
   define POSTBUILDCMDS
   endef
-all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
+all: prebuild prelink $(TARGET)
 	@:
 
 endif
@@ -64,12 +64,12 @@ ifeq ($(config),release)
   INCLUDES += -I../.. -I../../source -I../../source/generated -I../../include/Soundpipe/h -I../../include/Soundpipe/lib/faust -I../../include/Soundpipe/lib/kissfft -I../../include/Soundpipe/lib/spa
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0
+  ALL_LDFLAGS += $(LDFLAGS) -O3 -s EXPORTED_FUNCTIONS="['_sporthal_init', '_sporthal_compile', '_sporthal_start', '_sporthal_stop', '_sporthal_setp', '_sporthal_getp']" --memory-init-file 0 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -77,7 +77,7 @@ ifeq ($(config),release)
   endef
   define POSTBUILDCMDS
   endef
-all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
+all: prebuild prelink $(TARGET)
 	@:
 
 endif
@@ -363,18 +363,17 @@ RESOURCES := \
 
 CUSTOMFILES := \
 
-SHELLTYPE := msdos
-ifeq (,$(ComSpec)$(COMSPEC))
-  SHELLTYPE := posix
-endif
-ifeq (/bin,$(findstring /bin,$(SHELL)))
-  SHELLTYPE := posix
+SHELLTYPE := posix
+ifeq (.exe,$(findstring .exe,$(ComSpec)))
+	SHELLTYPE := msdos
 endif
 
-$(TARGET): $(GCH) ${CUSTOMFILES} $(OBJECTS) $(LDDEPS) $(RESOURCES)
+$(TARGET): $(GCH) ${CUSTOMFILES} $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR)
 	@echo Linking sporthal
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
+
+$(CUSTOMFILES): | $(OBJDIR)
 
 $(TARGETDIR):
 	@echo Creating $(TARGETDIR)
@@ -409,10 +408,12 @@ prelink:
 	$(PRELINKCMDS)
 
 ifneq (,$(PCH))
-$(OBJECTS): $(GCH) $(PCH)
-$(GCH): $(PCH)
+$(OBJECTS): $(GCH) $(PCH) | $(OBJDIR)
+$(GCH): $(PCH) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
+else
+$(OBJECTS): | $(OBJDIR)
 endif
 
 $(OBJDIR)/kiss_fft.o: ../../include/Soundpipe/lib/kissfft/kiss_fft.c
