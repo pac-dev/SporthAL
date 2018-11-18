@@ -1,6 +1,3 @@
 [submodule "include/Soundpipe"]
 	path = include/Soundpipe
 	url = https://github.com/PaulBatchelor/Soundpipe.git
-[submodule "include/Sporth"]
-	path = include/Sporth
-	url = https://github.com/PaulBatchelor/Sporth.git
